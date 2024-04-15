@@ -21,10 +21,10 @@ ydl ()		{
 		fi
 		name="$name1 $name2"
 
-		notify-send --urgency low "Téléchargement" "$name" -i "$icon"
-		if yt-dlp --cookies-from-browser chrome $format -o "~/Downloads/Ydl/$name" "$url"
-		then notify-send --urgency normal   "Téléchargement terminé" "$name" -i "$icon"
-		else notify-send --urgency critical "Échec du téléchargement" "$name" -i "$icon"
+		notify-send --urgency low "Downloading" "$name" -i "$icon"
+		if yt-dlp --cookies-from-browser chrome $format -o "~/Downloads/$name" "$url"
+		then notify-send --urgency normal   "Done" "$name" -i "$icon"
+		else notify-send --urgency critical "Fail" "$name" -i "$icon"
 		fi
 		}
 
@@ -36,17 +36,17 @@ ydlcut () 	{
 		fi
 		name="$name1 $name2"
 		
-		notify-send --urgency low "Téléchargement" "$name" -i "$icon"
+		notify-send --urgency low "Downloading" "$name" -i "$icon"
 		if yt-dlp --cookies-from-browser chrome --external-downloader ffmpeg --external-downloader-args "-ss $start -to $end" $format -o "~/Downloads/Ydl/$name" "$url"
-		then notify-send --urgency normal   "Téléchargement terminé" "$name" -i "$icon"
-		else notify-send --urgency critical "Échec du téléchargement" "$name" -i "$icon" 
+		then notify-send --urgency normal   "Done" "$name" -i "$icon"
+		else notify-send --urgency critical "Download Failed" "$name" -i "$icon" 
 		fi
 	 	}	
 
 if [[ "$ask" == *"Cut"* ]]
-then 	tcodes=$(yad --image=$icon --center --form --title='Cut' --text='Saisie timecodes HHMMSS' --field=Début --field=Fin "000" "000" | sed 's/|//gi')
+then 	tcodes=$(yad --image=$icon --center --form --title='Cut' --text='Enter timecodes HHMMSS' --field=Start --field=End "000" "000" | sed 's/|//gi')
 	if [[ ${#tcodes} != 12 ]] || [[ $tcodes != ?(-)+([0-9]) ]] 
-	then notify-send --urgency normal   "Téléchargement annulé" "Timecodes erronés ou manquants" -i "$icon" && exit 1				
+	then notify-send --urgency normal   "Download Failed" "Timecodes error or missing" -i "$icon" && exit 1				
 	else 	start=$(sed -e 's/../:&/2g' <<< "${tcodes:0:6}") ; end=$(sed -e 's/../:&/2g' <<< "${tcodes:6:6}")  
 		start1=$(date -u -d "$start" +"%s") ; end1=$(date -u -d "$end" +"%s") ; duration=$(date -u -d "0 $end1 sec - $start1 sec" +%T) 	
 		H=$(date -u -d "$duration" +%-H); M=$(date -u -d "$duration" +%-M); S=$(date -u -d "$duration" +%-S); T=;  			
@@ -59,9 +59,9 @@ fi
 case "$ask" in
  	*"Format selection"*)
  	yt-dlp --cookies-from-browser chrome -F $url | sed -e '1,/-/d' | sed 's/^/false\n/' > /tmp/ydlinfo.list   && 
-	selc=$(yad --center --width=800 --height=360 --list --text="Sélection vidéo et/ou audio" --checklist --column="" --column="" < /tmp/ydlinfo.list | cut -d '|' -f2 | cut -d ' ' -f1 | sed -e ':s;N;s/\n/+/;bs')
+	selc=$(yad --center --width=800 --height=360 --list --text="Select video and/or audio" --checklist --column="" --column="" < /tmp/ydlinfo.list | cut -d '|' -f2 | cut -d ' ' -f1 | sed -e ':s;N;s/\n/+/;bs')
 	if 	[ -z $selc ]
-	then 	notify-send --urgency normal "Téléchargement annulé" "Aucun format spécifié" -i "$icon" && exit 1
+	then 	notify-send --urgency normal "Download cancelled" "No format selected" -i "$icon" && exit 1
 	else 	format="-f $selc" && $downloader
 	fi ;;
 esac && case "$ask" in
