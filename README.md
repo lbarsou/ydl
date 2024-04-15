@@ -22,9 +22,11 @@ Tested in Debian/Linux & ArchLinux
  ```bash
   curl -o ydl.sh https://raw.githubusercontent.com/soufiance/ydl/main/script.sh
   chmod +x ydl.sh
-  ./ydl.sh
  ```
-
+## Usage
+ ```bash
+  ./ydl.sh yourVideoAudioLink.com
+ ```
   
 
 
