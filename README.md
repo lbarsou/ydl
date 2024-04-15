@@ -20,7 +20,7 @@ Tested in Debian/Linux & ArchLinux
 ## Installation
  
  ```bash
-  curl -o ydl.sh https://raw.githubusercontent.com/soufiance/ydl/main/script.sh
+  curl -o ydl.sh https://raw.githubusercontent.com/lbarsou/ydl/main/script.sh
   chmod +x ydl.sh
  ```
 ## Usage
